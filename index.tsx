@@ -30,7 +30,7 @@ export default class MaskedInput extends Component<IMaskedInputProps, IMaskedInp
 		this.updateMaskedValue(text);
 	}
 
-	public componentWillReceiveProps(nextProps: Readonly<IMaskedInputProps>, nextContext: any): void {
+	public componentDidUpdate(nextProps: Readonly<IMaskedInputProps>, nextContext: any): void {
 		this.userInputProcessorFunction = createInputProcessor(nextProps.mask);
 		this.updateMaskedValue(nextProps.value || "");
 	}

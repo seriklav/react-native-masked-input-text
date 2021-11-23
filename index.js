@@ -1,20 +1,23 @@
-var __rest = (this && this.__rest) || function (s, e) {
+var __rest = (this && this.__rest) || function(s, e) {
     var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
+    for (var p in s)
+        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++)
+            if (e.indexOf(p[i]) < 0)
+                t[p[i]] = s[p[i]];
     return t;
 };
-define("internals/types", ["require", "exports"], function (require, exports) {
+define("internals/types", ["require", "exports"], function(require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("internals/maskTokenizer", ["require", "exports"], function (require, exports) {
+define("internals/maskTokenizer", ["require", "exports"], function(require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const specialCharacters = ['0', 'x', 'X', 's', 'a'];
+
     function getNextTokenLength(mask, startIndex) {
         const char = mask.charAt(startIndex);
         if (char === '\\') {
@@ -30,6 +33,7 @@ define("internals/maskTokenizer", ["require", "exports"], function (require, exp
         }
         return 1;
     }
+
     function tokenize(mask) {
         const tokens = [];
         let currentIndex = 0;
@@ -42,6 +46,7 @@ define("internals/maskTokenizer", ["require", "exports"], function (require, exp
         return tokens;
     }
     exports.tokenize = tokenize;
+
     function createMaskTokenFromString(tokenString) {
         let realTokenValue = tokenString;
         const maskToken = {
@@ -56,8 +61,7 @@ define("internals/maskTokenizer", ["require", "exports"], function (require, exp
                 realTokenValue = realTokenValue.substr(0, realTokenValue.length - 1);
                 maskToken.optional = true;
             }
-        }
-        else if (isOptional(tokenString)) {
+        } else if (isOptional(tokenString)) {
             realTokenValue = realTokenValue.replace('?', '');
             maskToken.optional = true;
         }
@@ -67,29 +71,32 @@ define("internals/maskTokenizer", ["require", "exports"], function (require, exp
         }
         return maskToken;
     }
+
     function isOptional(token) {
         return token.endsWith('?');
     }
+
     function isLiteral(token) {
         return token.startsWith('\\');
     }
+
     function isImplicitLiteral(token) {
         return !specialCharacters.includes(token);
     }
+
     function getTokens(mask) {
         const tokens = tokenize(mask);
         return tokens.map(createMaskTokenFromString);
     }
     exports.getTokens = getTokens;
 });
-define("internals/tokens/token", ["require", "exports"], function (require, exports) {
+define("internals/tokens/token", ["require", "exports"], function(require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Token {
-    }
+    class Token {}
     exports.default = Token;
 });
-define("internals/tokens/literalToken", ["require", "exports", "internals/tokens/token"], function (require, exports, token_1) {
+define("internals/tokens/literalToken", ["require", "exports", "internals/tokens/token"], function(require, exports, token_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const charsNeedEscaping = ['(', ')', '+', '*', '.', '[', ']', '?'];
@@ -108,7 +115,7 @@ define("internals/tokens/literalToken", ["require", "exports", "internals/tokens
     }
     exports.default = LiteralToken;
 });
-define("internals/tokens/simpleToken", ["require", "exports", "internals/tokens/token"], function (require, exports, token_2) {
+define("internals/tokens/simpleToken", ["require", "exports", "internals/tokens/token"], function(require, exports, token_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class SimpleToken extends token_2.default {
@@ -118,18 +125,24 @@ define("internals/tokens/simpleToken", ["require", "exports", "internals/tokens/
         }
         getRegex() {
             switch (this.tokenValue) {
-                case '0': return '[0-9]';
-                case 'x': return '[a-z]';
-                case 'X': return '[A-Z]';
-                case 's': return '[a-zA-Z]';
-                case 'a': return '[a-zA-Z0-9]';
-                default: return `\\${this.tokenValue}`;
+                case '0':
+                    return '[0-9]';
+                case 'x':
+                    return '[a-z]';
+                case 'X':
+                    return '[A-Z]';
+                case 's':
+                    return '[a-zA-Z]';
+                case 'a':
+                    return '[a-zA-Z0-9]';
+                default:
+                    return `\\${this.tokenValue}`;
             }
         }
     }
     exports.default = SimpleToken;
 });
-define("internals/tokens/tokenDecorator", ["require", "exports", "internals/tokens/token"], function (require, exports, token_3) {
+define("internals/tokens/tokenDecorator", ["require", "exports", "internals/tokens/token"], function(require, exports, token_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class TokenDecorator extends token_3.default {
@@ -140,7 +153,7 @@ define("internals/tokens/tokenDecorator", ["require", "exports", "internals/toke
     }
     exports.default = TokenDecorator;
 });
-define("internals/tokens/optionalToken", ["require", "exports", "internals/tokens/tokenDecorator"], function (require, exports, tokenDecorator_1) {
+define("internals/tokens/optionalToken", ["require", "exports", "internals/tokens/tokenDecorator"], function(require, exports, tokenDecorator_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class OptionalToken extends tokenDecorator_1.default {
@@ -150,15 +163,15 @@ define("internals/tokens/optionalToken", ["require", "exports", "internals/token
     }
     exports.default = OptionalToken;
 });
-define("internals/maskRegexCreator", ["require", "exports", "internals/tokens/literalToken", "internals/tokens/simpleToken", "internals/tokens/optionalToken"], function (require, exports, literalToken_1, simpleToken_1, optionalToken_1) {
+define("internals/maskRegexCreator", ["require", "exports", "internals/tokens/literalToken", "internals/tokens/simpleToken", "internals/tokens/optionalToken"], function(require, exports, literalToken_1, simpleToken_1, optionalToken_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+
     function createRegexFromToken(token) {
         let tokenObject;
         if (token.literal) {
             tokenObject = new literalToken_1.default(token.token);
-        }
-        else {
+        } else {
             tokenObject = new simpleToken_1.default(token.token);
         }
         if (token.optional) {
@@ -167,13 +180,14 @@ define("internals/maskRegexCreator", ["require", "exports", "internals/tokens/li
         return tokenObject.getRegex();
     }
     exports.createRegexFromToken = createRegexFromToken;
+
     function createMaskRegex(tokens) {
         const regexes = tokens.map(createRegexFromToken);
         return regexes.reduce((maskRegex, tokenRegex) => maskRegex + tokenRegex, '');
     }
     exports.createMaskRegex = createMaskRegex;
 });
-define("internals/maskedTextResultFactory", ["require", "exports"], function (require, exports) {
+define("internals/maskedTextResultFactory", ["require", "exports"], function(require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MaskedTextResultFactory {
@@ -191,14 +205,15 @@ define("internals/maskedTextResultFactory", ["require", "exports"], function (re
     }
     exports.default = MaskedTextResultFactory;
 });
-define("internals/inputProcessor", ["require", "exports", "internals/maskTokenizer", "internals/maskRegexCreator", "internals/maskedTextResultFactory"], function (require, exports, maskTokenizer_1, maskRegexCreator_1, maskedTextResultFactory_1) {
+define("internals/inputProcessor", ["require", "exports", "internals/maskTokenizer", "internals/maskRegexCreator", "internals/maskedTextResultFactory"], function(require, exports, maskTokenizer_1, maskRegexCreator_1, maskedTextResultFactory_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var UserInputType;
-    (function (UserInputType) {
+    (function(UserInputType) {
         UserInputType[UserInputType["INSERTION"] = 0] = "INSERTION";
         UserInputType[UserInputType["DELETION"] = 1] = "DELETION";
     })(UserInputType = exports.UserInputType || (exports.UserInputType = {}));
+
     function createInputProcessor(mask) {
         const tokens = maskTokenizer_1.getTokens(mask);
         const regexes = createTokenRegexes(tokens);
@@ -225,6 +240,7 @@ define("internals/inputProcessor", ["require", "exports", "internals/maskTokeniz
         };
     }
     exports.createInputProcessor = createInputProcessor;
+
     function createTokenRegexes(tokens) {
         const tokenRegexes = [];
         for (const token of tokens) {
@@ -239,6 +255,7 @@ define("internals/inputProcessor", ["require", "exports", "internals/maskTokeniz
         }
         return tokenRegexes;
     }
+
     function processUserInput(value, inputType, options, currentIndex = 0) {
         let numberTokensConsumed = 1;
         let previousValue = value.substr(0, value.length - 1);
@@ -265,9 +282,11 @@ define("internals/inputProcessor", ["require", "exports", "internals/maskTokeniz
         }
         return createMaskResult(previousValue, numberTokensConsumed, false);
     }
+
     function createMaskResult(maskedValue, numberConsumedTokens, valid = true) {
         return { text: maskedValue, numberConsumedTokens: numberConsumedTokens, valid: valid };
     }
+
     function autofillNextChars(currentChar, inputType, tokens, currentTokenIndex) {
         let autoFilledValue = '';
         let numberSuccessfulIterations = 0;
@@ -282,19 +301,16 @@ define("internals/inputProcessor", ["require", "exports", "internals/maskTokeniz
                 autoCompleted = true;
                 numberSuccessfulIterations++;
                 currentIndex++;
-            }
-            else if (canNextCharBeSkipped(currentChar, inputType, currentToken)) {
+            } else if (canNextCharBeSkipped(currentChar, inputType, currentToken)) {
                 currentToken = tokens[currentIndex + 1];
                 autoCompleted = true;
                 numberSuccessfulIterations++;
                 currentIndex++;
-            }
-            else if (canCurrentCharBeRemovedFromInput(currentChar, inputType, currentToken)) {
+            } else if (canCurrentCharBeRemovedFromInput(currentChar, inputType, currentToken)) {
                 autoFilledValue = '';
                 inputWasIgnored = true;
                 autoCompleted = false;
-            }
-            else {
+            } else {
                 autoCompleted = false;
             }
         } while (autoCompleted);
@@ -304,29 +320,33 @@ define("internals/inputProcessor", ["require", "exports", "internals/maskTokeniz
             inputWasIgnored: inputWasIgnored
         };
     }
+
     function canNextCharBeSkipped(currentChar, inputType, currentToken) {
         return (inputType === UserInputType.INSERTION &&
             currentToken.literal &&
             currentToken.optional &&
             !currentCharMatchesRegex(currentChar, currentToken));
     }
+
     function canNextCharBeAutoCompleted(currentChar, inputType, currentToken) {
         return (inputType === UserInputType.INSERTION &&
             currentToken.literal &&
             !currentToken.optional &&
             !currentCharMatchesRegex(currentChar, currentToken));
     }
+
     function canCurrentCharBeRemovedFromInput(currentChar, inputType, currentToken) {
         return (inputType === UserInputType.INSERTION &&
             !currentToken.literal &&
             !currentCharMatchesRegex(currentChar, currentToken));
     }
+
     function currentCharMatchesRegex(currentChar, token) {
         const match = currentChar.match(token.regex);
         return (match != null && match[0] === currentChar);
     }
 });
-define("index", ["require", "exports", "react", "react", "react-native", "internals/inputProcessor"], function (require, exports, React, react_1, react_native_1, inputProcessor_1) {
+define("index", ["require", "exports", "react", "react", "react-native", "internals/inputProcessor"], function(require, exports, React, react_1, react_native_1, inputProcessor_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class MaskedInput extends react_1.Component {
@@ -339,7 +359,7 @@ define("index", ["require", "exports", "react", "react", "react-native", "intern
         onTextChange(text) {
             this.updateMaskedValue(text);
         }
-        componentWillReceiveProps(nextProps, nextContext) {
+        componentDidUpdate(nextProps, nextContext) {
             this.userInputProcessorFunction = inputProcessor_1.createInputProcessor(nextProps.mask);
             this.updateMaskedValue(nextProps.value || "");
         }
@@ -353,7 +373,9 @@ define("index", ["require", "exports", "react", "react", "react-native", "intern
             }
         }
         render() {
-            let _a = this.props, { mask, value, onTextChange } = _a, attributes = __rest(_a, ["mask", "value", "onTextChange"]);
+            let _a = this.props,
+                { mask, value, onTextChange } = _a,
+                attributes = __rest(_a, ["mask", "value", "onTextChange"]);
             return (React.createElement(react_native_1.TextInput, Object.assign({ value: this.state.value, onChangeText: (text) => this.onTextChange(text) }, attributes)));
         }
     }
