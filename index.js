@@ -359,7 +359,7 @@ define("index", ["require", "exports", "react", "react", "react-native", "intern
         onTextChange(text) {
             this.updateMaskedValue(text);
         }
-        componentDidUpdate(nextProps, nextContext) {
+        UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
             this.userInputProcessorFunction = inputProcessor_1.createInputProcessor(nextProps.mask);
             this.updateMaskedValue(nextProps.value || "");
         }
